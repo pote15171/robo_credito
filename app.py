@@ -3,9 +3,8 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-# URL da sua API da Z-API para o robô conseguir responder mensagens
-# Você encontra essas informações no painel da Z-API
-Z_API_URL = "https://z-api.io"
+# ⚠️ LINK DA SUA INSTÂNCIA DA Z-API (Substitua tudo o que está entre as aspas pelo seu link do "send-text")
+Z_API_URL = "COLE_AQUI_O_LINK_COMPLETO_DO_SEND_TEXT_DA_ZAP"
 
 def consultar_cnpj(cnpj):
     cnpj_limpo = "".join(filter(str.isdigit, cnpj))
