@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 # ⚠️ LINK DA SUA INSTÂNCIA DA Z-API (Substitua tudo o que está entre as aspas pelo seu link do "send-text")
-Z_API_URL = "COLE_AQUI_O_LINK_COMPLETO_DO_SEND_TEXT_DA_ZAP"
+Z_API_URL = "Z_API_URL = "https://z-api.io""
 
 def consultar_cnpj(cnpj):
     cnpj_limpo = "".join(filter(str.isdigit, cnpj))
