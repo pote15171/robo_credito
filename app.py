@@ -1,7 +1,7 @@
 import requests
 from flask import Flask, jsonify, request
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # URL real da sua Z-API com suas credenciais funcionando
 Z_API_URL = "https://z-api.io"
@@ -23,17 +23,17 @@ def consultar_cnpj(cnpj):
             capital = dados.get("capital_social", "0.00")
 
             resposta = (
-                f"📊 ANÁLISE DE CRÉDITO IMEDIATA\n\n"
-                f"🏢 Empresa: {nome}\n"
-                f"📅 Abertura: {abertura}\n"
-                f"🟢 Situação: {situacao}\n"
-                f"💰 Capital Social: R$ {capital}\n\n"
+                f"📊 *ANÁLISE DE CRÉDITO IMEDIATA*\n\n"
+                f"🏢 *Empresa:* {nome}\n"
+                f"📅 *Abertura:* {abertura}\n"
+                f"🟢 *Situação:* {situacao}\n"
+                f"💰 *Capital Social:* R$ {capital}\n\n"
             )
 
             if "ATIVA" in situacao.upper() or "ACTIVE" in situacao.upper():
-                resposta += "✅ Filtro Inicial Aprovado! Em breve enviarei a proposta de juros mínimos para você no chat."
+                resposta += "✅ *Filtro Inicial Aprovado!* Em breve enviarei a proposta de juros mínimos para você no chat."
             else:
-                resposta += "⚠️ Alerta: Empresa consta como INATIVA. Análise pausada."
+                resposta += "⚠️ *Alerta:* Empresa consta como INATIVA. Análise pausada."
 
             return resposta
         else:
@@ -89,11 +89,11 @@ def receber_mensagem():
         "1️⃣ Número do seu CNPJ:\n"
         "2️⃣ Valor que a sua empresa precisa hoje:\n"
         "3️⃣ Para quando você precisa desse recurso?\n\n"
-        "Assim que você responder escrevendo consult cnpj seguido do seu número, meus modelos de dados vão rodar a análise e eu mesmo vou te dar o retorno por aqui em poucos minutos. Obrigado!"
+        "Assim que você responder escrevendo *consult cnpj* seguido do seu número, meus modelos de dados vão rodar a análise e eu mesmo vou te dar o retorno por aqui em poucos minutos. Obrigado!"
     )
     
     enviar_whatsapp(numero_cliente, mensagem_boas_vindas)
     return jsonify({"status": "Mensagem de boas-vindas enviada para cliente novo"}), 200
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(port=5000, debug=True)
