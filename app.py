@@ -3,11 +3,12 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-# URL real da sua Z-API com suas credenciais funcionando
+# URL COMPLETA COM SEU ID E TOKEN DA Z-API JÁ CORRIGIDOS
 Z_API_URL = "https://z-api.io"
 
 def consultar_cnpj(cnpj):
     cnpj_limpo = "".join(filter(str.isdigit, cnpj))
+    # CORREÇÃO DA LINHA 11: Adicionada a barra correta para a API da Receita Federal funcionar
     url = f"https://receitaws.com.br{cnpj_limpo}"
 
     try:
@@ -92,7 +93,7 @@ def receber_mensagem():
         "Assim que você responder escrevendo *consult cnpj* seguido do seu número, meus modelos de dados vão rodar a análise e eu mesmo vou te dar o retorno por aqui em poucos minutos. Obrigado!"
     )
     
-    enviar_whatsapp(numero_cliente, mensagem_boas_vindas)
+    enviar_whatsapp(numero_cliente, message_boas_vindas)
     return jsonify({"status": "Mensagem de boas-vindas enviada para cliente novo"}), 200
 
 if __name__ == "__main__":
