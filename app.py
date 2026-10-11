@@ -8,7 +8,7 @@ Z_API_URL = "https://z-api.io"
 
 def consultar_cnpj(cnpj):
     cnpj_limpo = "".join(filter(str.isdigit, cnpj))
-    # CORREÇÃO DA LINHA 11: Adicionado o caminho oficial /v1/cnpj/ para o robô não travar
+        url = f"https://receitaws.com.br{cnpj_limpo}"
     url = f"https://receitaws.com.br{cnpj_limpo}"
 
     try:
