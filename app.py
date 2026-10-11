@@ -1,10 +1,10 @@
 import requests
 from flask import Flask, jsonify, request
 
-app = Flask(__name__)
+app = Flask(_name_)
 
-# ⚠️ LINK DA SUA INSTÂNCIA DA Z-API (Substitua tudo o que está entre as aspas pelo seu link do "send-text")
-Z_API_URL = "Z_API_URL = "https://z-api.io""
+# URL real da sua Z-API com suas credenciais funcionando
+Z_API_URL = "https://z-api.io"
 
 def consultar_cnpj(cnpj):
     cnpj_limpo = "".join(filter(str.isdigit, cnpj))
@@ -17,23 +17,23 @@ def consultar_cnpj(cnpj):
             if dados.get("status") == "ERROR":
                 return "❌ CNPJ inválido ou não encontrado na base de dados pública."
 
-            nome = dados.get("nome")
-            abertura = dados.get("abertura")
-            situacao = dados.get("situacao")
+            nome = dados.get("nome", "Não informado")
+            abertura = dados.get("abertura", "Não informada")
+            situacao = dados.get("situacao", "Não informada")
             capital = dados.get("capital_social", "0.00")
 
             resposta = (
-                f"📊 *ANÁLISE DE CRÉDITO IMEDIATA*\n\n"
-                f"🏢 *Empresa:* {nome}\n"
-                f"📅 *Abertura:* {abertura}\n"
-                f"🟢 *Situação:* {situacao}\n"
-                f"💰 *Capital Social:* R$ {float(capital):,.2f}\n\n"
+                f"📊 ANÁLISE DE CRÉDITO IMEDIATA\n\n"
+                f"🏢 Empresa: {nome}\n"
+                f"📅 Abertura: {abertura}\n"
+                f"🟢 Situação: {situacao}\n"
+                f"💰 Capital Social: R$ {capital}\n\n"
             )
 
-            if situacao == "ACTIVE" or situacao == "ATIVA":
-                resposta += "✅ *Filtro Inicial Aprovado!* Em breve enviarei a proposta de juros mínimos para você no chat."
+            if "ATIVA" in situacao.upper() or "ACTIVE" in situacao.upper():
+                resposta += "✅ Filtro Inicial Aprovado! Em breve enviarei a proposta de juros mínimos para você no chat."
             else:
-                resposta += "⚠️ *Alerta:* Empresa consta como INATIVA. Análise pausada."
+                resposta += "⚠️ Alerta: Empresa consta como INATIVA. Análise pausada."
 
             return resposta
         else:
@@ -42,7 +42,6 @@ def consultar_cnpj(cnpj):
         return f"❌ Erro de conexão ao analisar o CNPJ: {e}"
 
 def enviar_whatsapp(numero, texto):
-    """ Função que conecta com a Z-API para disparar a mensagem de volta pro cliente """
     payload = {"phone": numero, "message": texto}
     headers = {"Content-Type": "application/json"}
     try:
@@ -64,7 +63,7 @@ def receber_mensagem():
     if eh_grupo:
         return jsonify({"status": "Ignorado: Grupo"}), 200
 
-    # SE ESTIVER SALVO NA AGENDA: O robô só responde se a pessoa pedir a consulta do CNPJ diretamente
+    # SE ESTIVER SALVO NA AGENDA: O robô ignora mensagens normais e só responde se for a consulta direta
     if esta_salvo:
         if "consult cnpj" in texto_cliente:
             apenas_numeros = "".join(filter(str.isdigit, texto_cliente))
@@ -75,7 +74,6 @@ def receber_mensagem():
         return jsonify({"status": "Contato salvo mandando mensagem comum. Ignorado."}), 200
 
     # SE FOR UM CLIENTE NOVO (NÃO SALVO NA AGENDA):
-    # Passo A: Se ele digitou o comando de consulta, o robô roda a análise
     if "consult cnpj" in texto_cliente:
         apenas_numeros = "".join(filter(str.isdigit, texto_cliente))
         if len(apenas_numeros) == 14:
@@ -83,7 +81,7 @@ def receber_mensagem():
             enviar_whatsapp(numero_cliente, resultado)
             return jsonify({"status": "CNPJ de cliente novo processado"}), 200
 
-    # Passo B: Se ele mandou qualquer outra mensagem (ex: Oi, Quero crédito, etc), manda o texto de Boas-Vindas oficial
+    # Se mandou qualquer outra mensagem, dispara o texto de Boas-Vindas oficial
     mensagem_boas_vindas = (
         "Olá! Seja muito bem-vindo(a). 👋\n"
         "Obrigado pelo contato. Aqui o atendimento é direto, sem burocracia bancária e focado em resolver a necessidade do seu caixa rápido.\n\n"
@@ -91,11 +89,11 @@ def receber_mensagem():
         "1️⃣ Número do seu CNPJ:\n"
         "2️⃣ Valor que a sua empresa precisa hoje:\n"
         "3️⃣ Para quando você precisa desse recurso?\n\n"
-        "Assim que você responder escrevendo *consult cnpj* seguido do seu número, meus modelos de dados vão rodar a análise e eu mesmo vou te dar o retorno por aqui em poucos minutos. Obrigado!"
+        "Assim que você responder escrevendo consult cnpj seguido do seu número, meus modelos de dados vão rodar a análise e eu mesmo vou te dar o retorno por aqui em poucos minutos. Obrigado!"
     )
     
     enviar_whatsapp(numero_cliente, mensagem_boas_vindas)
     return jsonify({"status": "Mensagem de boas-vindas enviada para cliente novo"}), 200
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     app.run(port=5000, debug=True)
