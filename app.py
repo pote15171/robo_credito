@@ -3,12 +3,11 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-# URL REAL DA SUA Z-API COM SEU ID E TOKEN SALVOS CORRETAMENTE
+# URL real da sua Z-API com suas credenciais funcionando
 Z_API_URL = "https://z-api.io"
 
 def consultar_cnpj(cnpj):
     cnpj_limpo = "".join(filter(str.isdigit, cnpj))
-        url = f"https://receitaws.com.br{cnpj_limpo}"
     url = f"https://receitaws.com.br{cnpj_limpo}"
 
     try:
